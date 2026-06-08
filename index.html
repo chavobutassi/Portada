@@ -908,10 +908,39 @@ footer {
 <div class="grid-bg"></div>
 <div class="glow-orb"></div>
 
-
+<!-- LOCK -->
+<div class="lock-screen" id="lockScreen">
+  <div class="lock-terminal">
+    <div class="lock-bar">
+      <div class="lock-dot" style="background:#ff4560"></div>
+      <div class="lock-dot" style="background:#f0a500"></div>
+      <div class="lock-dot" style="background:#00c896"></div>
+      <div class="lock-title-bar">auth_portal — bash</div>
+    </div>
+    <div class="lock-body">
+      <div class="lock-prompt">
+        <div class="line" style="color:var(--muted)">$ connecting to claudio-butassi.dev...</div>
+        <div class="line" style="color:var(--green)">✓ connection established</div>
+        <div class="line" style="color:var(--muted)">$ authentication required</div>
+        <div class="line" style="color:var(--cyan)">enter access_key:</div>
+      </div>
+      <div class="lock-input-row">
+        <span class="lock-prompt-sym">$</span>
+        <input class="lock-input" type="password" id="lockInput" placeholder="••••••••" maxlength="64"
+          onkeydown="if(event.key==='Enter') checkPass()">
+      </div>
+      <button class="lock-btn" id="lockBtn" onclick="checkPass()">ACCESS →</button>
+      <div class="lock-error" id="lockError"></div>
+      <div class="lock-access-hint" style="margin-top:16px;text-align:center">
+        ¿No tenés clave? →
+        <a href="mailto:cjbutassi@gmail.com" style="color:var(--green);font-family:var(--mono);font-size:10px;">cjbutassi@gmail.com</a>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- APP -->
-<div id="appContent">
+<div id="appContent" style="display:none">
 
 <nav class="topbar">
   <div class="tb-logo">CLAUDIO BUTASSI</div>
@@ -1219,6 +1248,59 @@ setInterval(() => {
   ring.style.left = rx-16+'px';
   ring.style.top = ry-16+'px';
 }, 16);
+
+// LOCK — validación contra Vercel Function (clave en variable de entorno)
+let intentos = 0;
+
+async function checkPass() {
+  const input = document.getElementById('lockInput');
+  const errEl = document.getElementById('lockError');
+  const btn = document.getElementById('lockBtn');
+
+  const key = input.value.trim();
+  if (!key) return;
+
+  btn.disabled = true;
+  btn.textContent = 'VERIFICANDO...';
+
+  try {
+    const res = await fetch('/api/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key })
+    });
+
+    const data = await res.json();
+
+    if (data.ok) {
+      sessionStorage.setItem('auth', '1');
+      document.getElementById('lockScreen').style.display = 'none';
+      document.getElementById('appContent').style.display = 'block';
+      initApp();
+    } else {
+      intentos++;
+      input.value = '';
+      errEl.textContent = '✗ acceso denegado — intento ' + intentos + '/5';
+      btn.disabled = false;
+      btn.textContent = 'ACCESS →';
+      if (intentos >= 5) {
+        input.disabled = true;
+        btn.disabled = true;
+        errEl.textContent = '✗ demasiados intentos. recargá la página.';
+      }
+    }
+  } catch (e) {
+    errEl.textContent = '✗ error de conexión. intentá de nuevo.';
+    btn.disabled = false;
+    btn.textContent = 'ACCESS →';
+  }
+}
+
+if (sessionStorage.getItem('auth') === '1') {
+  document.getElementById('lockScreen').style.display = 'none';
+  document.getElementById('appContent').style.display = 'block';
+  initApp();
+}
 
 function initApp() {
   buildTicker();
