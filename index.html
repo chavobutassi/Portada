@@ -198,27 +198,60 @@ body::before {
 
 .lock-input::placeholder { color: var(--muted); letter-spacing: 2px; font-size: 12px; }
 
-.lock-btn {
-  width: 100%;
-  background: var(--green);
-  color: #040608;
-  border: none;
+.lock-access-msg {
+  opacity: 0;
+  animation: fadeInLine 0.4s 1.8s forwards;
+  text-align: center;
+  padding: 8px 0 4px;
+}
+
+.lock-access-icon {
+  font-size: 28px;
+  margin-bottom: 14px;
+}
+
+.lock-access-text {
+  font-family: var(--body);
+  font-size: 13px;
+  color: var(--muted2);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.lock-email-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--green-dim2);
+  color: var(--green);
+  border: 1px solid var(--border2);
   border-radius: 4px;
-  padding: 12px;
+  padding: 12px 20px;
   font-family: var(--mono);
   font-size: 13px;
   font-weight: 600;
-  cursor: pointer;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  transition: all 0.15s;
-  opacity: 0;
-  animation: fadeInLine 0.3s 2.0s forwards;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  transition: all 0.2s;
+  width: 100%;
+  justify-content: center;
+  margin-bottom: 14px;
 }
 
-.lock-btn:hover { background: var(--green2); box-shadow: 0 0 20px rgba(0,200,150,0.4); }
-.lock-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-.lock-error { font-family: var(--mono); font-size: 11px; color: var(--red); margin-top: 10px; min-height: 16px; }
+.lock-email-btn:hover {
+  background: var(--green-dim);
+  box-shadow: 0 0 20px rgba(0,200,150,0.25);
+  color: var(--green2);
+}
+
+.lock-email-icon { font-style: normal; font-size: 15px; }
+
+.lock-access-hint {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+}
 
 /* MAIN CONTENT */
 #appContent { position: relative; z-index: 1; }
@@ -908,39 +941,8 @@ footer {
 <div class="grid-bg"></div>
 <div class="glow-orb"></div>
 
-<!-- LOCK -->
-<div class="lock-screen" id="lockScreen">
-  <div class="lock-terminal">
-    <div class="lock-bar">
-      <div class="lock-dot" style="background:#ff4560"></div>
-      <div class="lock-dot" style="background:#f0a500"></div>
-      <div class="lock-dot" style="background:#00c896"></div>
-      <div class="lock-title-bar">auth_portal — bash</div>
-    </div>
-    <div class="lock-body">
-      <div class="lock-prompt">
-        <div class="line" style="color:var(--muted)">$ connecting to claudio-butassi.dev...</div>
-        <div class="line" style="color:var(--green)">✓ connection established</div>
-        <div class="line" style="color:var(--muted)">$ authentication required</div>
-        <div class="line" style="color:var(--cyan)">enter access_key:</div>
-      </div>
-      <div class="lock-input-row">
-        <span class="lock-prompt-sym">$</span>
-        <input class="lock-input" type="password" id="lockInput" placeholder="••••••••" maxlength="64"
-          onkeydown="if(event.key==='Enter') checkPass()">
-      </div>
-      <button class="lock-btn" id="lockBtn" onclick="checkPass()">ACCESS →</button>
-      <div class="lock-error" id="lockError"></div>
-      <div class="lock-access-hint" style="margin-top:16px;text-align:center">
-        ¿No tenés clave? →
-        <a href="mailto:cjbutassi@gmail.com" style="color:var(--green);font-family:var(--mono);font-size:10px;">cjbutassi@gmail.com</a>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- APP -->
-<div id="appContent" style="display:none">
+<div id="appContent">
 
 <nav class="topbar">
   <div class="tb-logo">CLAUDIO BUTASSI</div>
@@ -1249,58 +1251,7 @@ setInterval(() => {
   ring.style.top = ry-16+'px';
 }, 16);
 
-// LOCK — validación contra Vercel Function (clave en variable de entorno)
-let intentos = 0;
-
-async function checkPass() {
-  const input = document.getElementById('lockInput');
-  const errEl = document.getElementById('lockError');
-  const btn = document.getElementById('lockBtn');
-
-  const key = input.value.trim();
-  if (!key) return;
-
-  btn.disabled = true;
-  btn.textContent = 'VERIFICANDO...';
-
-  try {
-    const res = await fetch('/api/auth', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ key })
-    });
-
-    const data = await res.json();
-
-    if (data.ok) {
-      sessionStorage.setItem('auth', '1');
-      document.getElementById('lockScreen').style.display = 'none';
-      document.getElementById('appContent').style.display = 'block';
-      initApp();
-    } else {
-      intentos++;
-      input.value = '';
-      errEl.textContent = '✗ acceso denegado — intento ' + intentos + '/5';
-      btn.disabled = false;
-      btn.textContent = 'ACCESS →';
-      if (intentos >= 5) {
-        input.disabled = true;
-        btn.disabled = true;
-        errEl.textContent = '✗ demasiados intentos. recargá la página.';
-      }
-    }
-  } catch (e) {
-    errEl.textContent = '✗ error de conexión. intentá de nuevo.';
-    btn.disabled = false;
-    btn.textContent = 'ACCESS →';
-  }
-}
-
-if (sessionStorage.getItem('auth') === '1') {
-  document.getElementById('lockScreen').style.display = 'none';
-  document.getElementById('appContent').style.display = 'block';
-  initApp();
-}
+initApp();
 
 function initApp() {
   buildTicker();
