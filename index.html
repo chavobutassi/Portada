@@ -1026,7 +1026,7 @@ footer {
   <div class="stats-grid">
     <div class="stat-block reveal">
       <div class="stat-label">Proyectos de datos</div>
-      <div class="stat-num"><span class="count" data-target="5">5</span></div>
+      <div class="stat-num"><span class="count" data-target="8">8</span></div>
       <div class="stat-sub">Dashboards y pipelines en producción, deployados con CI/CD.</div>
     </div>
     <div class="stat-block reveal">
@@ -1154,11 +1154,71 @@ footer {
         <span class="proj-tag">ETL</span>
         <span class="proj-tag">Chart.js</span>
         <span class="proj-tag">Data Quality</span>
-        <span class="proj-tag">Vercel</span>
+        <span class="proj-tag">GitHub Pages</span>
       </div>
       <div class="proj-footer">
         <div class="proj-status"></div>
         <span class="proj-url">chavobutassi.github.io/gestion-hidrica-minera</span>
+      </div>
+    </a>
+
+    <a class="project-card" href="https://github.com/chavobutassi/sosten" target="_blank">
+      <div class="proj-header">
+        <div class="proj-num">06</div>
+        <div class="proj-arrow">↗</div>
+      </div>
+      <span class="proj-icon">⛽</span>
+      <div class="proj-name">SOSTÉN — LOGÍSTICA DE CAMPO</div>
+      <div class="proj-desc">Monitor de sostenimiento de operaciones de campo: días de cobertura por frente e insumo, capacidad de reposición de flota, riesgo de ruta por clima y acciones priorizadas. Escenario ficticio calibrado con datos públicos de fractura de Vaca Muerta.</div>
+      <div class="proj-tags">
+        <span class="proj-tag">PostgreSQL</span>
+        <span class="proj-tag">FastAPI</span>
+        <span class="proj-tag">Dashboard HTML</span>
+        <span class="proj-tag">Netlify</span>
+      </div>
+      <div class="proj-footer">
+        <div class="proj-status"></div>
+        <span class="proj-url">github.com/chavobutassi/sosten</span>
+      </div>
+    </a>
+
+    <a class="project-card" href="https://github.com/chavobutassi/flota-predictiva" target="_blank">
+      <div class="proj-header">
+        <div class="proj-num">07</div>
+        <div class="proj-arrow">↗</div>
+      </div>
+      <span class="proj-icon">🚚</span>
+      <div class="proj-name">FLOTA PREDICTIVA</div>
+      <div class="proj-desc">Base de datos y aplicación web para gestionar una flota y anticipar su mantenimiento: 20 tablas, 6 vistas y 6 triggers que hacen cumplir las reglas del negocio, generador de datos sintéticos y tests.</div>
+      <div class="proj-tags">
+        <span class="proj-tag">PostgreSQL</span>
+        <span class="proj-tag">SQL</span>
+        <span class="proj-tag">Python</span>
+        <span class="proj-tag">Render</span>
+      </div>
+      <div class="proj-footer">
+        <div class="proj-status"></div>
+        <span class="proj-url">github.com/chavobutassi/flota-predictiva</span>
+      </div>
+    </a>
+
+    <a class="project-card" href="https://github.com/chavobutassi/field-ops-readiness-template" target="_blank">
+      <div class="proj-header">
+        <div class="proj-num">08</div>
+        <div class="proj-arrow">↗</div>
+      </div>
+      <span class="proj-icon">📋</span>
+      <div class="proj-name">FIELD OPS READINESS</div>
+      <div class="proj-desc">Estándar abierto en Excel para organizaciones con cuadrillas de campo: cinco tablas planas y un índice semanal de preparación (cobertura, certificaciones, tiempos de respuesta, backlog). Incluye datos simulados y protocolo de piloto de 90 días.</div>
+      <div class="proj-tags">
+        <span class="proj-tag">Excel</span>
+        <span class="proj-tag">KPIs</span>
+        <span class="proj-tag">Documentación</span>
+        <span class="proj-tag">Open source</span>
+      </div>
+      <div class="proj-footer">
+        <div class="proj-status"></div>
+        <span class="proj-url">github.com/chavobutassi/field-ops-readiness-template</span>
       </div>
     </a>
 
@@ -1190,15 +1250,15 @@ footer {
     </div>
     <div class="skill-card">
       <div class="skill-icon">🗄️</div>
-      <div class="skill-name">MySQL / SQLite</div>
+      <div class="skill-name">SQL / PostgreSQL</div>
       <div class="skill-desc">Diseño de bases de datos relacionales, consultas optimizadas y migraciones.</div>
       <div class="skill-bar-wrap"><div class="skill-bar" data-pct="78"></div></div>
       <div class="skill-pct">78%</div>
     </div>
     <div class="skill-card">
-      <div class="skill-icon">🔥</div>
-      <div class="skill-name">Firebase</div>
-      <div class="skill-desc">Realtime Database, autenticación y hosting para apps colaborativas en la nube.</div>
+      <div class="skill-icon">📈</div>
+      <div class="skill-name">Power BI / DAX</div>
+      <div class="skill-desc">Modelado dimensional, medidas DAX y tableros para decisiones ejecutivas.</div>
       <div class="skill-bar-wrap"><div class="skill-bar" data-pct="75"></div></div>
       <div class="skill-pct">75%</div>
     </div>
@@ -1338,6 +1398,7 @@ function initCounters() {
       }
     });
   }, { threshold: 0.5 });
+  (function(){var n=document.querySelectorAll('#proyectos .project-card').length;var c=document.querySelector('.count[data-target]');if(c&&n){c.dataset.target=n;c.textContent=n;}})();
   document.querySelectorAll('.count').forEach(el => obs.observe(el));
 }
 
